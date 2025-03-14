@@ -3,10 +3,7 @@
  */
 package com.mycompany.jconnectionmavenmain;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.Optional;
 
 /**
  *
@@ -16,34 +13,22 @@ public class JConnectionMavenMain {
 
     public static void main(String[] args) {
 
-        // Chess database: username, email
-        String url = "jdbc:mysql://localhost:3306/chess";
+        // Create new DbManager instance.
+        DbManager dbMgr = new DbManager();
 
-        String user = "root";
+        // Create a new player to add to the database.
+        Player player = new Player("jim", "jim@email.com");
 
-        String password = "";
+        // Add the player to the database.
+        dbMgr.create(player); // The 'create' method creates a temporary connection.
 
-        // Database driver class
-        String dbDriver = "com.mysql.cj.jdbc.Driver"; // can be read from config
+        // See if Alice is in the database.
+        Optional<Player> optionalPlayer = dbMgr.read("alice@email.com");
 
-        try {
-
-//            Class.forName(dbDriver); not needed from JDBC 4.0 onwards
-            Connection conn = DriverManager.getConnection(url, user, password);
-            // Check if connected.
-            if (conn != null && !conn.isClosed()) {
-                System.out.println("✅ Successfully connected to database!");
-            } else {
-                System.out.println("❌ Connection failed.");
-            }
-            // Do stuff
-            Statement stmt = conn.createStatement();
-            String insertQuery = "insert into PLAYERS(username, email) values ('Pwnzor55', 'gavan@email.com')";
-            stmt.execute(insertQuery); // close connection
-        } catch (SQLException e) {
-            System.out.println("Something went wrong connecting to the database ...");
-            e.printStackTrace();
+        // Does the optional contain a player?
+        if (optionalPlayer.isPresent()) {
+            // Print the email.
+            System.out.println(optionalPlayer.get().getEmail());
         }
-
     }
 }
