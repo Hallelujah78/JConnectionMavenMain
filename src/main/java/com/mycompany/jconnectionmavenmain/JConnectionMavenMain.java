@@ -17,7 +17,7 @@ public class JConnectionMavenMain {
         DbManager dbMgr = new DbManager();
 
         // Create a new player to add to the database.
-        Player player = new Player("jim", "jim@email.com");
+        Player player = new Player("joe", "joe@email.com");
 
         // Add the player to the database.
         dbMgr.create(player); // The 'create' method creates a temporary connection.
@@ -25,10 +25,27 @@ public class JConnectionMavenMain {
         // See if Alice is in the database.
         Optional<Player> optionalPlayer = dbMgr.read("alice@email.com");
 
-        // Does the optional contain a player?
-        if (optionalPlayer.isPresent()) {
-            // Print the email.
-            System.out.println(optionalPlayer.get().getEmail());
+
+        /*
+        Update the Alice Player instance and update the database.
+        Code fails silently if optionalPlayer is empty, which is fine.
+         */
+        optionalPlayer.ifPresent(p -> {
+            // Update email.
+            p.setEmail("alison@email.com");
+            // Update name.
+            p.setUsername("Alison");
+
+            // Update database.
+            dbMgr.update(p);
+
+        });
+
+        // Check for an email that doesn't exist.
+        optionalPlayer = dbMgr.read("doozy@email.com");
+        if (!optionalPlayer.isPresent()) {
+            System.out.println("\nPlayer not found!");
         }
+
     }
 }
