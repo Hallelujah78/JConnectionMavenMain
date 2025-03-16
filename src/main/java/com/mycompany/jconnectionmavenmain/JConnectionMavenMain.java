@@ -47,5 +47,32 @@ public class JConnectionMavenMain {
             System.out.println("\nPlayer not found!");
         }
 
+        // Create a new player.
+        player = new Player("doozy", "doozy@email.com");
+
+        // Add doozy@email.com
+        dbMgr.create(player);
+        System.out.println("\nDoozy has been added to database!");
+
+        // Delete doozy@email.com
+        int rowsAffected = dbMgr.delete(player);
+        // Notify user if item was deleted or not.
+        if (rowsAffected > 0) {
+            System.out.println("Player " + player.getEmail() + " successfully deleted.");
+        } else {
+            System.out.println("No item found in database with email " + player.getEmail() + ". Database not updated.");
+        }
+
+        // Create player to delete.
+        player = new Player("woozy", "woozy@email.com");
+
+        // Delete a player that doesn't exist in the database.
+        rowsAffected = dbMgr.delete(player);
+        // Notify user if item was deleted or not.
+        if (rowsAffected > 0) {
+            System.out.println("Player " + player.getEmail() + " successfully deleted.");
+        } else {
+            System.out.println("No item found in database with email " + player.getEmail() + ". Database not updated.");
+        }
     }
 }

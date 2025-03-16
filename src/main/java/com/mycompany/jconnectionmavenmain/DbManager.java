@@ -173,8 +173,46 @@ public class DbManager {
         }
     }
 
+    /**
+     * Deletes a given Player instance from the database. The method creates a
+     * temporary database connection. This is not efficient and connection
+     * pooling should be used, for example, HikariCP.
+     *
+     * @param player The Player instance to delete from the database.
+     * @return int The number of rows affected by the delete operation. Returns
+     * 0 if nothing was deleted.
+     */
+    public int delete(Player player) {
+
+        // Create query string.
+        String deleteQuery = "delete from PLAYERS where email = ?";
+
+        // Get a new connection.
+        try (
+                Connection conn = getConnection(); // Get a connection.
+                // Get the prepstatement.
+                 var prepStatement = conn.prepareStatement(deleteQuery)) {
+
+            // Set the email.
+            prepStatement.setString(1, player.getEmail());
+
+            // Execute the create query and see if deletion occurred.
+            int rowsAffected = prepStatement.executeUpdate();
+            return rowsAffected;
+
+        } catch (SQLException e) {
+            // Inform user of the error.
+            System.out.println("An SQLException occurred when trying to delete player with email: " + player.getEmail());
+            // Print stack trace - do not use in production.
+            e.printStackTrace();
+        }
+        // Return 0 here - since we may not have returned from the try block.
+        return 0;
+    }
+
     // get all
-    // get specific
-    // update specific
+    // get specific - done
+    // update specific - done
+    // delete specific - done
     // delete all
 }
