@@ -9,6 +9,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -210,7 +212,45 @@ public class DbManager {
         return 0;
     }
 
-    // get all
+    /**
+     * Query the database
+     *
+     *
+     * @return a Player instance.
+     */
+    public List<Player> readAll() {
+
+        // Create the query.
+        String readAllQuery = "SELECT * FROM PLAYERS";
+        // Set player to null.
+        List<Player> players = new ArrayList<Player>();
+
+        // Get a new connection.
+        try (
+                Connection conn = getConnection(); // Get the connection.
+                 var prepStatement = conn.prepareStatement(readAllQuery) // Prepare the statement.
+                ) {
+
+            // Execute the query.
+            ResultSet rs = prepStatement.executeQuery();
+
+            while (rs.next()) {
+                // ResultSet is not empty, create a player + add to players list.
+                Player player = new Player(rs.getString("username"), rs.getString("email"), rs.getInt("id"));
+                players.add(player);
+            }
+            return players;
+        } catch (SQLException e) {
+            // Inform user of the error.
+            System.out.println("An SQLException occurred when trying to read players from the database.");
+            // Print stack trace - do not use in production.
+            e.printStackTrace();
+
+        }
+        return players;
+    }
+
+    // get all - done
     // get specific - done
     // update specific - done
     // delete specific - done

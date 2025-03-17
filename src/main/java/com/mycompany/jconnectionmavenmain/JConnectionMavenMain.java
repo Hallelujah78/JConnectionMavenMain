@@ -3,6 +3,7 @@
  */
 package com.mycompany.jconnectionmavenmain;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -58,7 +59,7 @@ public class JConnectionMavenMain {
         int rowsAffected = dbMgr.delete(player);
         // Notify user if item was deleted or not.
         if (rowsAffected > 0) {
-            System.out.println("Player " + player.getEmail() + " successfully deleted.");
+            System.out.println("Player with email " + player.getEmail() + " successfully deleted.");
         } else {
             System.out.println("No item found in database with email " + player.getEmail() + ". Database not updated.");
         }
@@ -73,6 +74,13 @@ public class JConnectionMavenMain {
             System.out.println("Player " + player.getEmail() + " successfully deleted.");
         } else {
             System.out.println("No item found in database with email " + player.getEmail() + ". Database not updated.");
+        }
+        // Read all the records in the database.
+        List<Player> players = dbMgr.readAll();
+
+        // Print all the retrieved players out.
+        for (Player p : players) {
+            System.out.println(p.toString());
         }
     }
 }

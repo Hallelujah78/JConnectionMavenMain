@@ -64,4 +64,9 @@ public class Player {
         this.id = id;
     }
 
+    @Override
+    public String toString() {
+        return "username: " + username + ", email: " + email + ", id: " + id;
+    }
+
 }
