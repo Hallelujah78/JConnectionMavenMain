@@ -213,10 +213,10 @@ public class DbManager {
     }
 
     /**
-     * Query the database
+     * Query the database to retrieve all players.
      *
      *
-     * @return a Player instance.
+     * @return a List of Player instances.
      */
     public List<Player> readAll() {
 
@@ -248,6 +248,45 @@ public class DbManager {
 
         }
         return players;
+    }
+
+    /**
+     * Query the database to see if a Player exists.
+     *
+     *
+     * @return true if the player exists, false otherwise.
+     */
+    public boolean existsByEmail(String email) {
+
+        // Create the query.
+        String existsQuery = "SELECT COUNT(1) FROM PLAYERS WHERE email = ?";
+
+        // Get a new connection.
+        try (
+                Connection conn = getConnection(); // Get the connection.
+                 var prepStatement = conn.prepareStatement(existsQuery) // Prepare the statement.
+                ) {
+
+            // Set the email value.
+            prepStatement.setString(1, email);
+            // Execute the query.
+            ResultSet rs = prepStatement.executeQuery();
+
+            // If the record exists.
+            if (rs.next() && rs.getInt(1) > 0) {
+                // Return true.
+                return true;
+            }
+            return false;
+
+        } catch (SQLException e) {
+            // Inform user of the error.
+            System.out.println("An SQLException occurred when trying to read players from the database.");
+            // Print stack trace - do not use in production.
+            e.printStackTrace();
+
+        }
+        return false;
     }
 
     // get all - done

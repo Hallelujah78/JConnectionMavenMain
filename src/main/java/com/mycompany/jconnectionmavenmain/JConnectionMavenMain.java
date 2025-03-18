@@ -82,5 +82,14 @@ public class JConnectionMavenMain {
         for (Player p : players) {
             System.out.println(p.toString());
         }
+
+        String email = "gavan@email.com";
+        // Check if player exists via email.
+        boolean playerExists = dbMgr.existsByEmail(email);
+        if (playerExists) {
+            System.out.println("The player with email " + email + " exists in the database!");
+        } else {
+            System.out.println("The player with email " + email + " doesn't exist in the database!");
+        }
     }
 }
